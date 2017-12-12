@@ -39,7 +39,7 @@ This file contains utils specific to Wmodif stuff like redrawing reconciliations
 Created the: 24-03-2016
 by: Wandrille Duchemin
 
-Last modified the: 27-02-2017
+Last modified the: 12-12-2017
 by: Wandrille Duchemin
 
 */
@@ -406,9 +406,12 @@ void ReDrawGeneFamilyProper(int GfamIdToReset, int redrawAlgo,
                         double probaFlat,
                         double probaC1Bias , MyCladesAndTripartitions * biasedCCP,
                         string gPathPrefix, int nbTry, int maxNbTry ,
-                        bool noCoev , double DLRecCoevTemp
+                        bool noCoev , double DLRecCoevTemp,
+                        string DTLRecCoevExecPath
                          )
 {
+
+
     if(redrawAlgo == 0)
         GeneFamilyList->at(GfamIdToReset)->changeReconciliation( speciesTree, datedSpeciesTree, boundedTS); // just re-draw a tree in the already computed DTLMatrix. Won't work if no DTLMatrix have been computed
     else if(redrawAlgo == 1)
@@ -439,7 +442,7 @@ void ReDrawGeneFamilyProper(int GfamIdToReset, int redrawAlgo,
         if( DLRecCoevFolder[ DLRecCoevFolder.size() - 1 ] != '/')
                 DLRecCoevFolder += "/";
         DLRecCoevFolder += "DTLRecCoev/";
-        DLRecCoevWrapper wrapper( DLRecCoevFolder );
+        DTLRecCoevWrapper wrapper( DLRecCoevFolder , DTLRecCoevExecPath);
 
         wrapper.setGFamToRedraw(GeneFamilyList->at(GfamIdToReset));
         wrapper.setRelativeTopoWeight(TopoWeight / RecWeight);
@@ -560,7 +563,8 @@ void ReDrawGeneFamily(int GfamIdToReset, int redrawAlgo,
                         double probaFlat,
                         double probaC1Bias , MyCladesAndTripartitions * biasedCCP,
                         string gPathPrefix, int nbTry, int maxNbTry,
-                        bool noCoev , double DLRecCoevTemp 
+                        bool noCoev , double DLRecCoevTemp,
+                        string DTLRecCoevExecPath
                          )
 {
 
@@ -581,7 +585,8 @@ void ReDrawGeneFamily(int GfamIdToReset, int redrawAlgo,
                         probaFlat,
                         probaC1Bias, biasedCCP,
                         gPathPrefix, nbTry, maxNbTry,
-                        noCoev, DLRecCoevTemp
+                        noCoev, DLRecCoevTemp,
+                        DTLRecCoevExecPath
                          );
 
 

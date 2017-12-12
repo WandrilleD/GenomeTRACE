@@ -42,7 +42,7 @@ This file contains utils specific to Wmodif stuff like redrawing reconciliations
 Created the: 24-03-2016
 by: Wandrille Duchemin
 
-Last modified the: 30-05-2017
+Last modified the: 12-12-2017
 by: Wandrille Duchemin
 
 */
@@ -54,7 +54,7 @@ by: Wandrille Duchemin
 #include "CoEvent.h"
 #include "DeCoUtils.h"
 #include "XMLUtils.h"
-#include "DLRecCoevWrapper.h"
+#include "DTLRecCoevWrapper.h"
 
 
 class GfamSave
@@ -118,13 +118,6 @@ void refineCoEvents(vector <CoEvent> * CoEventSet);
 vector <bool> checkingCoEventsAncestorSonConstraint( vector <CoEvent> * CoEventSet , vector < GeneFamily * > * GeneFamilyList);
 
 
-//void ReDrawGeneFamily(int GfamIdToReset, int redrawAlgo, 
-//                        vector < GeneFamily * > * GeneFamilyList, vector < EquivalenceClassFamily > * ECFams, vector < CoEvent > * CoEventSet,
-//                        MySpeciesTree * speciesTree, bool datedSpeciesTree, bool boundedTS, bool withTransfer,
-//                        double DupliCost, double HGTCost, double LossCost, int maxTS, double TopoWeight,
-//                        double Again, double Abreak, double absencePenalty, bool doAllPair, bool substractRecoToAdj,
-//                        double weightedDupCost, double weightedLossCost, double weightedHGTCost, bool alwaysGainAtTop, double C1Advantage,
-//                        bool verbose, bool superverbose );
 
 
 
@@ -137,7 +130,8 @@ void ReDrawGeneFamilyProper(int GfamIdToReset, int redrawAlgo,
                         double probaFlat,
                         double probaC1Bias , MyCladesAndTripartitions * biasedCCP,
                         string gPathPrefix, int nbTry = 0, int maxNbTry = 1,
-                        bool noCoev=false , double DLRecCoevTemp=0.5
+                        bool noCoev=false , double DLRecCoevTemp=0.5,
+                        string DTLRecCoevExecPath=""
                          );
 
 void ReDrawGeneFamily(int GfamIdToReset, int redrawAlgo, 
@@ -153,7 +147,8 @@ void ReDrawGeneFamily(int GfamIdToReset, int redrawAlgo,
                         double probaFlat,
                         double probaC1Bias = 0 , MyCladesAndTripartitions * biasedCCP = NULL,
                         string gPathPrefix = "", int nbTry = 0, int maxNbTry = 1,
-                        bool noCoev =false, double DLRecCoevTemp=0.5
+                        bool noCoev =false, double DLRecCoevTemp=0.5,
+                        string DTLRecCoevExecPath=""
                         );
 
 

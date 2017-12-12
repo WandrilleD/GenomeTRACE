@@ -106,7 +106,7 @@ map<string,string> gStringParams; // string, char, and path
 
 
 
-const int gParameterCount = 44;
+const int gParameterCount = 45;
 string const gParameters[gParameterCount][4] = {
 // files
  {"parameter.file", "path", "none", "a file with input parameters" },
@@ -177,6 +177,8 @@ string const gParameters[gParameterCount][4] = {
  {"proba.bias","double","0","probability to bias the CCP distribution to force it to keep the clade where an ancestral adjacency was computed (no effect is 0)" },
  {"continue.sampling.while.accepted","bool","false","If true, the system will continue to run if at least 1 new gene family was succesfully updated during this round" },
  {"redraw.algo","int","0","0 : only change reconciliation (doesn't work right now) ; 1 : ccp only redraw ; 2 : externally calls DTLRecCoev"},
+
+ {"DTLRecCoevExecPath","string","", "used only when redraw.algo=2. specifies the path where the external DTLRecCoev executable can be found"},
 
  {"DTLRecCoev.NoCoev","bool","false","doesn't take potential co-event in account when externally calling DTLRecCoev"},
  {"DTLRecCoev.Temp","double","0.5","temperature of DTLRecCoev"}
@@ -1200,7 +1202,8 @@ int main(int args, char ** argv)
                                         probaFlat,
                                         gDoubleParams.find("proba.bias")->second, BiasedCndT,
                                         outputDir, nbtry, tryLimit,
-                                        noCoev , DLRecCoevTemp 
+                                        noCoev , DLRecCoevTemp,
+                                        gStringParams.find("DTLRecCoevExecPath")->second
                                         );
 
 
