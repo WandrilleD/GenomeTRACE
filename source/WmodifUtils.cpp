@@ -39,7 +39,7 @@ This file contains utils specific to Wmodif stuff like redrawing reconciliations
 Created the: 24-03-2016
 by: Wandrille Duchemin
 
-Last modified the: 12-12-2017
+Last modified the: 11-01-2018
 by: Wandrille Duchemin
 
 */
@@ -161,7 +161,8 @@ void refiningAndComputingECFamily(EquivalenceClassFamily * ECF,
 									double weightedDupCost, double weightedLossCost, double weightedHGTCost, 
 									bool alwaysGainAtTop, double C1Advantage,bool superverbose,
                                     map<int,vector<float> > speciesC0C1,
-                                    map<int, map<string,int> > speGeneAdjNb 
+                                    map<int, map<string,int> > speGeneAdjNb,
+                                    bool interactionMode
                                     )
 {
 
@@ -191,7 +192,9 @@ void refiningAndComputingECFamily(EquivalenceClassFamily * ECF,
                           Rtree1,  Rtree2,
                           superverbose ,
                           false , 1 , // boltzmann stuff
-                          absencePenalty);
+                          absencePenalty,10000,
+                          interactionMode);
+
 
     if(!substractRecoToAdj)
         ECF->computeAdjMatrix();
@@ -240,7 +243,8 @@ void refiningAndComputingECFamilyList(vector <EquivalenceClassFamily> * ECFams, 
 										double weightedDupCost, double weightedLossCost, double weightedHGTCost, 
 										bool alwaysGainAtTop, double C1Advantage, bool verbose, bool superverbose,
                                         map<int,vector<float> > speciesC0C1,
-                                        map<int, map<string,int> > speGeneAdjNb 
+                                        map<int, map<string,int> > speGeneAdjNb,
+                                        bool interactionMode 
                                         )
 {
     
@@ -268,8 +272,11 @@ void refiningAndComputingECFamilyList(vector <EquivalenceClassFamily> * ECFams, 
 										weightedDupCost, weightedLossCost, weightedHGTCost, 
 										alwaysGainAtTop, C1Advantage, superverbose,
                                         speciesC0C1,
-                                        speGeneAdjNb 
+                                        speGeneAdjNb,
+                                        interactionMode 
                                         );
+
+
             if(verbose)
                 cout << "-> " << ECF->getNbEqClasses() << " equivalence classes." << endl;
             if(verbose)
@@ -564,7 +571,8 @@ void ReDrawGeneFamily(int GfamIdToReset, int redrawAlgo,
                         double probaC1Bias , MyCladesAndTripartitions * biasedCCP,
                         string gPathPrefix, int nbTry, int maxNbTry,
                         bool noCoev , double DLRecCoevTemp,
-                        string DTLRecCoevExecPath
+                        string DTLRecCoevExecPath,
+                        bool interactionMode
                          )
 {
 
@@ -601,9 +609,9 @@ void ReDrawGeneFamily(int GfamIdToReset, int redrawAlgo,
                                                 alwaysGainAtTop, C1Advantage,
                                                 verbose,superverbose,
                                                 speciesC0C1,
-                                                speGeneAdjNb 
+                                                speGeneAdjNb ,
+                                                interactionMode
                                                 );
-
 
 
 
@@ -692,7 +700,8 @@ void ReplaceGeneFamilyRecTree(int GfamIdToReset, ReconciledTree * newRTree, doub
                         double weightedDupCost, double weightedLossCost, double weightedHGTCost, bool alwaysGainAtTop, double C1Advantage,
                         bool verbose , bool superverbose,
                         map<int,vector<float> > speciesC0C1,
-                        map<int, map<string,int> > speGeneAdjNb 
+                        map<int, map<string,int> > speGeneAdjNb,
+                        bool interactionMode 
                          )
 {
     //1. prepping
@@ -744,7 +753,8 @@ void ReplaceGeneFamilyRecTree(int GfamIdToReset, ReconciledTree * newRTree, doub
                                                 alwaysGainAtTop, C1Advantage,
                                                 superverbose,false,
                                                 speciesC0C1,
-                                                speGeneAdjNb 
+                                                speGeneAdjNb,
+                                                interactionMode 
                                                 );
 
 
@@ -1069,7 +1079,8 @@ bool tryGfamRedraw(int GfamIdToReset, int redrawAlgo, bool trySeveralECFSolution
                     map<int,vector<float> > speciesC0C1,
                     map<int, map<string,int> > speGeneAdjNb,
                     double probaC1Bias , MyCladesAndTripartitions * biasedCCP ,
-                    string gPathPrefix
+                    string gPathPrefix,
+                    bool interactionMode
                     )
 {
     
@@ -1106,7 +1117,8 @@ bool tryGfamRedraw(int GfamIdToReset, int redrawAlgo, bool trySeveralECFSolution
                         speGeneAdjNb, 
                         probaFlat,
                         probaC1Bias , biasedCCP ,
-                        gPathPrefix
+                        gPathPrefix,
+                        interactionMode
                         );
 
     //for(unsigned i = 0 ; i < (*CoEventSetPointer)->size(); i++)
@@ -1456,9 +1468,6 @@ returns:
 bool readECFamTreesOneFile(string filename, vector< EquivalenceClassFamily > * ECFams, bool gainAtRoot, bool VERBOSE)
 {
 
- 
-    
-
     ifstream fileStream(filename.c_str());
     
     if( !fileStream.is_open() ) 
@@ -1582,7 +1591,13 @@ void LoadGeneFamilyReconciledTrees( vector < GeneFamily * > * GeneFamilyList, st
     }
     else
     {
-        string fileName = prefix + ".reconciliations.xml";
+        string fileName = prefix ;
+        if( fileName.length() >0 )
+        {
+            if(fileName[ fileName.length() -1 ] != '/')
+                fileName += ".";
+        }
+        fileName += "reconciliations.xml";
         cout << "reading in "<< fileName << endl;
 
         ifstream fileStream(fileName.c_str());

@@ -106,7 +106,7 @@ map<string,string> gStringParams; // string, char, and path
 
 
 
-const int gParameterCount = 45;
+const int gParameterCount = 46;
 string const gParameters[gParameterCount][4] = {
 // files
  {"parameter.file", "path", "none", "a file with input parameters" },
@@ -160,6 +160,9 @@ string const gParameters[gParameterCount][4] = {
  {"absence.penalty","double","-1","if set to -1 (the default), nothing changes. Otherwise, specify the cost of having an adjacency at a pair of leaves which are not part of the list of adjacencies given at initialization"},
  {"substract.reco.to.adj","bool","false","if set to 1, the weighted cost of a reconciliation event will be used to favor co-event in the adjacency matrix computation. Unavalaible for Boltzmann computation."},
  
+ {"all.children.adj.transmission.rules","bool","false","whether or not adjacencies should be expected to be transmitted to all children in the same species or not"},
+
+
  {"Topology.weight","double","1","weight of the topology in the global score" },
  {"Reconciliation.weight","double","1","weight of the reconciliation in the global score" },//30
  {"Adjacency.weight","double","1","weight of the adjacency in the global score" },
@@ -537,12 +540,12 @@ int main(int args, char ** argv)
         if( verbose ) {
 	        cout << "**********************************************"
                     "********************" << endl;
-	        cout << "*                 DeCoSTAR, version " 
+	        cout << "*                 GenomeTRACE, version " 
                  << version << "          *" << endl;
 	        cout << "* Authors: W. Duchemin, C. Scornavacca, E. Jacox         "
                     "Created     02/03/16 *" << endl;
 	        cout << "*                                           "
-                    "Last Modif  14/03/16 *" << endl;
+                    "Last Modif  11/01/18 *" << endl;
 	        cout << "**********************************************"
                     "********************" << endl;
 	        cout << endl;
@@ -796,7 +799,14 @@ int main(int args, char ** argv)
 
         if(gBoolParams.find("load.save")->second) //we load a previous DeCo instance adjacency trees
         {
-            string filename = LoadPrefix + ".adjacencyTrees.xml";
+            string filename = LoadPrefix;
+            if( filename.length() >0)
+            {
+                if( filename[ filename.length() - 1 ] != '/')
+                    filename += ".";
+            }
+            filename  = filename + "adjacencyTrees.xml";
+
             bool ok = readECFamTreesOneFile(filename, ECFams, gBoolParams.find("always.AGain")->second, superverbose);
 
             if(!ok)
@@ -847,7 +857,9 @@ int main(int args, char ** argv)
     														gDoubleParams.find("HGT.cost")->second * gDoubleParams.find("Reconciliation.weight")->second / gAdjWeight, 
     													verbose,superverbose, 
     													1,//gDoubleParams.find("boltzmann.temperature")->second,
-                                                        gDoubleParams.find("absence.penalty")->second);
+                                                        gDoubleParams.find("absence.penalty")->second,
+                                                        gBoolParams.find("all.children.adj.transmission.rules")->second
+                                                        );
 
 
                                                 
@@ -1203,7 +1215,8 @@ int main(int args, char ** argv)
                                         gDoubleParams.find("proba.bias")->second, BiasedCndT,
                                         outputDir, nbtry, tryLimit,
                                         noCoev , DLRecCoevTemp,
-                                        gStringParams.find("DTLRecCoevExecPath")->second
+                                        gStringParams.find("DTLRecCoevExecPath")->second,
+                                        gBoolParams.find("all.children.adj.transmission.rules")->second
                                         );
 
 

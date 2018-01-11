@@ -40,7 +40,7 @@ This file contains the functions relative to cost computation for the class AdjM
 Created the: 12-05-2016
 by: Wandrille Duchemin
 
-Last modified the: 9-12-2016
+Last modified the: 11-01-2018
 by: Wandrille Duchemin
 
 */
@@ -905,58 +905,74 @@ vector<AdjSolution> AdjMatrix::SolutionC1synchronousTwoChildren(int NodeId1, int
 
 					//determining the number of gains and breaks
 					int nbadj = c1a1b1 + c1a1b2 + c1a2b1 + c1a2b2;
-					switch( nbadj )
-					{
-						case 0: // none linked -> 2 break if covent, 1 if not ; unless we are in the dead (then no break)
-							currentSolution->NbGain = 0;
-							if(inTheDead)
-								currentSolution->NbBreak = 0;
-							else if(iscoevent)
-								currentSolution->NbBreak = 2;
-							else
-								currentSolution->NbBreak = 1;
-							break;
-						case 1:// only one linked -> 1 break unless we are in the dead or not co-events
-							currentSolution->NbGain = 0;
-							if(inTheDead)
-								currentSolution->NbBreak = 0;
-							else if(iscoevent)
-								currentSolution->NbBreak = 1;
-							else
-								currentSolution->NbBreak = 0;
-							break;
-						case 3: // three linked -> 1 gain if coevent; 2 otherwise
-							if(iscoevent)
-								currentSolution->NbGain = 1;
-							else
-								currentSolution->NbGain = 2;
-							currentSolution->NbBreak = 0;	
-							break;
-						case 4: // all linked -> 2 gains if coevent; 3 otherwise
-							if(iscoevent)
-								currentSolution->NbGain = 2;
-							else
-								currentSolution->NbGain = 3;
-							currentSolution->NbBreak = 0;	
-							break;
-						default: //exactly 2 adjs
-							currentSolution->NbGain = 0;
+
+										if(interactionMode)
+					{ // in interaction mode, we expect a total of 4 adjacencies between children of a and b.
+					  // any less than that cost a Break, except in the dead.
+
+						currentSolution->NbGain = 0;
+						if(inTheDead)
 							currentSolution->NbBreak = 0;
-							if(iscoevent)
-							{
-								if(( c1a1b1 == c1a1b2 ) || (c1a1b1 == c1a2b1 )) // scenarii where 1 child has two adjs -> one gain and 1 break unless we are in the dead
+						else
+							currentSolution->NbBreak = nbadj-4;
+
+					}
+					else
+					{
+
+						switch( nbadj )
+						{
+							case 0: // none linked -> 2 break if covent, 1 if not ; unless we are in the dead (then no break)
+								currentSolution->NbGain = 0;
+								if(inTheDead)
+									currentSolution->NbBreak = 0;
+								else if(iscoevent)
+									currentSolution->NbBreak = 2;
+								else
+									currentSolution->NbBreak = 1;
+								break;
+							case 1:// only one linked -> 1 break unless we are in the dead or not co-events
+								currentSolution->NbGain = 0;
+								if(inTheDead)
+									currentSolution->NbBreak = 0;
+								else if(iscoevent)
+									currentSolution->NbBreak = 1;
+								else
+									currentSolution->NbBreak = 0;
+								break;
+							case 3: // three linked -> 1 gain if coevent; 2 otherwise
+								if(iscoevent)
+									currentSolution->NbGain = 1;
+								else
+									currentSolution->NbGain = 2;
+								currentSolution->NbBreak = 0;	
+								break;
+							case 4: // all linked -> 2 gains if coevent; 3 otherwise
+								if(iscoevent)
+									currentSolution->NbGain = 2;
+								else
+									currentSolution->NbGain = 3;
+								currentSolution->NbBreak = 0;	
+								break;
+							default: //exactly 2 adjs
+								currentSolution->NbGain = 0;
+								currentSolution->NbBreak = 0;
+								if(iscoevent)
+								{
+									if(( c1a1b1 == c1a1b2 ) || (c1a1b1 == c1a2b1 )) // scenarii where 1 child has two adjs -> one gain and 1 break unless we are in the dead
+									{
+										currentSolution->NbGain = 1;
+										if(inTheDead)
+											currentSolution->NbBreak = 0;
+										else
+											currentSolution->NbBreak = 1;
+									}
+								}
+								else // not a coevent -> exactly 1 gain
 								{
 									currentSolution->NbGain = 1;
-									if(inTheDead)
-										currentSolution->NbBreak = 0;
-									else
-										currentSolution->NbBreak = 1;
 								}
-							}
-							else // not a coevent -> exactly 1 gain
-							{
-								currentSolution->NbGain = 1;
-							}
+						}
 					}
 
 					if(isSout) // we see if we need to correct the number of break (if the transferred couple wase lost)
@@ -1104,7 +1120,11 @@ vector<AdjSolution> AdjMatrix::SolutionC1synchronousTwoAndOneChildren(int NodeId
 	///4 cases
 	//case 1 -> neither child 1 nor child 2 kept an adjacency -> 1 break if not in the dead
 	if(!inTheDead)
+	{
 		nbBreak = 1;
+		if(interactionMode)
+			nbBreak++;
+	}
 
 	currentSolution = new AdjSolution(0,nbBreak,iscoevent) ;  // 0 gain 1 break if not in the dead
 	currentSolution->components.push_back( Sc0ab1 );
@@ -1120,7 +1140,10 @@ vector<AdjSolution> AdjMatrix::SolutionC1synchronousTwoAndOneChildren(int NodeId
 	caseScore.clear();
 
 	//case 2 -> child 1  kept an adjacency 
-	currentSolution = new AdjSolution(0,0,iscoevent) ;  // 0 gain 0 break 
+	if((!inTheDead)&&(interactionMode))
+		nbBreak++;
+
+	currentSolution = new AdjSolution(0,nbBreak,iscoevent) ;  // 0 gain 0 break 
 	currentSolution->components.push_back( Sc1ab1 );
 	currentSolution->components.push_back( Sc0ab2 );
 	caseScore.push_back( c1ab1 );
@@ -1135,8 +1158,12 @@ vector<AdjSolution> AdjMatrix::SolutionC1synchronousTwoAndOneChildren(int NodeId
 
 	delete currentSolution;
 	caseScore.clear();
+	nbBreak = 0;
 	//case 3 -> child 2 kept an adjacency 
-	currentSolution = new AdjSolution(0,0,iscoevent) ;  // 0 gain 0 break 
+	if((!inTheDead)&&(interactionMode))
+		nbBreak++;
+
+	currentSolution = new AdjSolution(0,nbBreak,iscoevent) ;  // 0 gain 0 break 
 	currentSolution->components.push_back( Sc0ab1 );
 	currentSolution->components.push_back( Sc1ab2 );
 	caseScore.push_back( c0ab1 );
@@ -1154,7 +1181,11 @@ vector<AdjSolution> AdjMatrix::SolutionC1synchronousTwoAndOneChildren(int NodeId
 	delete currentSolution;
 	caseScore.clear();
 	//case 4 -> child 1 and child 2 kept an adjacency -> 1 gain
-	currentSolution = new AdjSolution(1,0,iscoevent) ;  // 1 gain 0 break 
+	int nbGain = 1;
+	if(interactionMode)
+		nbGain = 0;
+
+	currentSolution = new AdjSolution(nbGain,0,iscoevent) ;  // 1 gain 0 break 
 	currentSolution->components.push_back( Sc1ab1 );
 	currentSolution->components.push_back( Sc1ab2 );
 	caseScore.push_back( c1ab1 );
@@ -1371,7 +1402,12 @@ vector<AdjSolution> AdjMatrix::SolutionC1asynchronousTwoChildren(int NodeId1, in
 	///4 cases
 	//case 1 -> neither child 1 nor child 2 kept an adjacency -> 1 break if not in the dead
 	if(!inTheDead)
+	{
 		nbBreak = 1;
+		if(interactionMode)
+			nbBreak++;
+	}
+
 
 	currentSolution = new AdjSolution(0,nbBreak,iscoevent) ;  // 0 gain 1 break if not in the dead
 	currentSolution->components.push_back( Sc0ab1 );
@@ -1387,7 +1423,10 @@ vector<AdjSolution> AdjMatrix::SolutionC1asynchronousTwoChildren(int NodeId1, in
 	caseScore.clear();
 
 	//case 2 -> child 1  kept an adjacency 
-	currentSolution = new AdjSolution(0,0,iscoevent) ;  // 0 gain 0 break 
+	if( (!inTheDead) && (interactionMode) )
+		nbBreak++;	
+
+	currentSolution = new AdjSolution(0,nbBreak,iscoevent) ;  // 0 gain 0 break 
 	currentSolution->components.push_back( Sc1ab1 );
 	currentSolution->components.push_back( Sc0ab2 );
 	caseScore.push_back( c1ab1 );
@@ -1402,8 +1441,13 @@ vector<AdjSolution> AdjMatrix::SolutionC1asynchronousTwoChildren(int NodeId1, in
 
 	delete currentSolution;
 	caseScore.clear();
-	//case 3 -> child 2 kept an adjacency 
-	currentSolution = new AdjSolution(0,0,iscoevent) ;  // 0 gain 0 break 
+	nbBreak = 0;
+
+	//case 3 -> child 2 kept an adjacency
+	if( (!inTheDead) && (interactionMode) )
+		nbBreak++;	
+ 
+	currentSolution = new AdjSolution(0,nbBreak,iscoevent) ;  // 0 gain 0 break 
 	currentSolution->components.push_back( Sc0ab1 );
 	currentSolution->components.push_back( Sc1ab2 );
 	caseScore.push_back( c0ab1 );
@@ -1420,8 +1464,13 @@ vector<AdjSolution> AdjMatrix::SolutionC1asynchronousTwoChildren(int NodeId1, in
 
 	delete currentSolution;
 	caseScore.clear();
-	//case 4 -> child 1 and child 2 kept an adjacency -> 1 gain
-	currentSolution = new AdjSolution(1,0,iscoevent) ;  // 1 gain 0 break 
+	//case 4 -> child 1 and child 2 kept an adjacency -> 1 gain if we are in "neighborhood" mode
+	//                                                -> 0 gain if we are in "interaction" mode	int nbGain = 0;
+	int nbGain = 1;
+	if(interactionMode)
+		nbGain = 0;
+
+	currentSolution = new AdjSolution(nbGain,0,iscoevent) ;  // 1 gain 0 break 
 	currentSolution->components.push_back( Sc1ab1 );
 	currentSolution->components.push_back( Sc1ab2 );
 	caseScore.push_back( c1ab1 );

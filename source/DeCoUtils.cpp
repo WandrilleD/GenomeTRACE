@@ -39,7 +39,7 @@ This file contains various functions used by DeCo
 Created the: 02-03-2016
 by: Wandrille Duchemin
 
-Last modified the: 10-02-2017
+Last modified the: 11-01-2018
 by: Wandrille Duchemin
 
 */
@@ -1600,7 +1600,7 @@ Takes:
  - double adjScoreLogBase [default : 10000] : base of the log that will be used to go from adjacency confidence score to parsimony costs
 
 */
-void ComputeEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList , map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty, double adjScoreLogBase )
+void ComputeEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList , map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty, double adjScoreLogBase , bool interactionMode)
 {
 	cout << setprecision(2);
 	for(unsigned i = 0 ; i < ECFams->size(); i++)
@@ -1614,7 +1614,7 @@ void ComputeEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, 
 										Gcost,  Bcost ,  
 										boltzmann,  SubRecInAdj, 
 										WDupCost,  WLossCost, WHgtCost, 
-										Verbose, SuperVerbose, boltzmannTemp , absencePenalty, adjScoreLogBase );
+										Verbose, SuperVerbose, boltzmannTemp , absencePenalty, adjScoreLogBase , interactionMode);
 
 		if(Verbose)
 			cout << "Matrix computed" << endl;
@@ -1648,13 +1648,13 @@ Takes:
 Returns:
 	vector < pair < pair<string, string> , double > >
 */
-vector < pair < pair<string, string> , double > > ComputeOneEquivalenceClassFamily( EquivalenceClassFamily * ECF, vector <GeneFamily *> * GeneFamilyList, map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty, double adjScoreLogBase )
+vector < pair < pair<string, string> , double > > ComputeOneEquivalenceClassFamily( EquivalenceClassFamily * ECF, vector <GeneFamily *> * GeneFamilyList, map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty, double adjScoreLogBase, bool interactionMode )
 {
 
 	ReconciledTree * Rtree1 =  GeneFamilyList->at(ECF->getGfamily1())->getRecTree();
 	ReconciledTree * Rtree2 =  GeneFamilyList->at(ECF->getGfamily2())->getRecTree();
 
-	return ComputeOneEquivalenceClassFamily( ECF,  Rtree1, Rtree2, adjacencyScores, speciesC0C1, speGeneAdjNb,  Gcost, Bcost , boltzmann, SubRecInAdj, WDupCost, WLossCost, WHgtCost, Verbose, SuperVerbose, boltzmannTemp , absencePenalty );
+	return ComputeOneEquivalenceClassFamily( ECF,  Rtree1, Rtree2, adjacencyScores, speciesC0C1, speGeneAdjNb,  Gcost, Bcost , boltzmann, SubRecInAdj, WDupCost, WLossCost, WHgtCost, Verbose, SuperVerbose, boltzmannTemp , absencePenalty , interactionMode);
 	
 }
 
@@ -1684,11 +1684,11 @@ Takes:
 Returns:
 	vector < pair < pair<string, string> , double > >
 */
-vector < pair < pair<string, string> , double > > ComputeOneEquivalenceClassFamily( EquivalenceClassFamily * ECF, ReconciledTree * Rtree1, ReconciledTree * Rtree2, map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty, double adjScoreLogBase)
+vector < pair < pair<string, string> , double > > ComputeOneEquivalenceClassFamily( EquivalenceClassFamily * ECF, ReconciledTree * Rtree1, ReconciledTree * Rtree2, map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty, double adjScoreLogBase, bool interactionMode)
 {
 	cout << setprecision(2);
 
-	vector < pair < pair<string, string> , double > > scoreAssociation = ECF->createAdjMatrix(adjacencyScores, speciesC0C1, speGeneAdjNb, Gcost, Bcost,  Rtree1,  Rtree2, SuperVerbose , boltzmann , boltzmannTemp , absencePenalty, adjScoreLogBase);
+	vector < pair < pair<string, string> , double > > scoreAssociation = ECF->createAdjMatrix(adjacencyScores, speciesC0C1, speGeneAdjNb, Gcost, Bcost,  Rtree1,  Rtree2, SuperVerbose , boltzmann , boltzmannTemp , absencePenalty, adjScoreLogBase, interactionMode);
 	if(!SubRecInAdj)
 		ECF->computeAdjMatrix();
 	else //using weighted reconciliation event costs
@@ -1905,9 +1905,9 @@ Takes:
  - double adjScoreLogBase [default : 10000] : base of the log that will be used to go from adjacency confidence score to parsimony costs
 
 */
-void ComputeAndBacktrackEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList ,map < string, map <string , double> > &adjacencyScores,  map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, bool galwaysGain, double gC1Advantage, double boltzmannTemp , double absencePenalty, double adjScoreLogBase )
+void ComputeAndBacktrackEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList ,map < string, map <string , double> > &adjacencyScores,  map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, bool galwaysGain, double gC1Advantage, double boltzmannTemp , double absencePenalty, double adjScoreLogBase, bool interactionMode )
 {
-	ComputeEquivalenceClassFamilies( ECFams,  GeneFamilyList , adjacencyScores, speciesC0C1, speGeneAdjNb, Gcost,  Bcost ,  boltzmann,  SubRecInAdj, WDupCost,  WLossCost,  WHgtCost,  Verbose,  SuperVerbose,  boltzmannTemp ,  absencePenalty, adjScoreLogBase );
+	ComputeEquivalenceClassFamilies( ECFams,  GeneFamilyList , adjacencyScores, speciesC0C1, speGeneAdjNb, Gcost,  Bcost ,  boltzmann,  SubRecInAdj, WDupCost,  WLossCost,  WHgtCost,  Verbose,  SuperVerbose,  boltzmannTemp ,  absencePenalty, adjScoreLogBase , interactionMode);
 	backtrackInPlaceEquivalenceClassFamilies( ECFams, GeneFamilyList , boltzmann, Verbose, SuperVerbose, galwaysGain, gC1Advantage);
 }
 

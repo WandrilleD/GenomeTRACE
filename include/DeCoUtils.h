@@ -41,7 +41,7 @@ This file contains various functions used by DeCo
 Created the: 02-03-2016
 by: Wandrille Duchemin
 
-Last modified the: 10-02-2017
+Last modified the: 11-01-2018
 by: Wandrille Duchemin
 
 */
@@ -113,15 +113,15 @@ bool computeArtDeCoMaps(vector< pair <string,string > > &adjacencies, map <strin
 
 
 
-void ComputeEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList, map < string, map <string , double> > &adjacencyScores,  map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty , double adjScoreLogBase =10000);
+void ComputeEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList, map < string, map <string , double> > &adjacencyScores,  map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty , double adjScoreLogBase =10000, bool interactionMode=false);
 
 void backtrackInPlaceEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList , 
                                                 bool boltzmann, bool Verbose, bool SuperVerbose, bool galwaysGain, double  gC1Advantage,
                                                 bool useCounts = true
                                                 );
 
-vector < pair < pair<string, string> , double > > ComputeOneEquivalenceClassFamily( EquivalenceClassFamily * ECF, vector <GeneFamily *> * GeneFamilyList, map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty ,double adjScoreLogBase =10000);
-vector < pair < pair<string, string> , double > > ComputeOneEquivalenceClassFamily( EquivalenceClassFamily * ECF, ReconciledTree * Rtree1, ReconciledTree * Rtree2, map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty , double adjScoreLogBase =10000);
+vector < pair < pair<string, string> , double > > ComputeOneEquivalenceClassFamily( EquivalenceClassFamily * ECF, vector <GeneFamily *> * GeneFamilyList, map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty ,double adjScoreLogBase =10000, bool interactionMode = false);
+vector < pair < pair<string, string> , double > > ComputeOneEquivalenceClassFamily( EquivalenceClassFamily * ECF, ReconciledTree * Rtree1, ReconciledTree * Rtree2, map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, double boltzmannTemp , double absencePenalty , double adjScoreLogBase =10000, bool interactionMode = false);
 void backtrackInPlaceOneEquivalenceClassFamily(EquivalenceClassFamily * ECF, vector <GeneFamily *> * GeneFamilyList , bool boltzmann, bool Verbose, bool SuperVerbose, bool galwaysGain, double  gC1Advantage);
 void backtrackInPlaceOneEquivalenceClassFamily(EquivalenceClassFamily * ECF, ReconciledTree * Rtree1, ReconciledTree * Rtree2 , bool boltzmann, bool Verbose, bool SuperVerbose, bool galwaysGain, double  gC1Advantage);
 
@@ -130,7 +130,7 @@ void backtrackOnetimeOneEquivalenceClassFamily( ECFsample * Sample, EquivalenceC
 void backtrackNtimesOneEquivalenceClassFamily(NECFsample * Samples, EquivalenceClassFamily * ECF, int N , vector <GeneFamily *> * GeneFamilyList , bool boltzmann, bool Verbose, bool SuperVerbose, bool galwaysGain, double  gC1Advantage);
 void backtrackNtimesNequivalenceClassFamilies(vector <NECFsample * > * AllSamples, vector <EquivalenceClassFamily > * ECFams, int N , vector <GeneFamily *> * GeneFamilyList , bool boltzmann, bool Verbose, bool SuperVerbose, bool galwaysGain, double  gC1Advantage);
 
-void ComputeAndBacktrackEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList ,map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, bool galwaysGain, double gC1Advantage, double boltzmannTemp = 1, double absencePenalty = -1, double adjScoreLogBase =10000);
+void ComputeAndBacktrackEquivalenceClassFamilies(vector < EquivalenceClassFamily> * ECFams, vector <GeneFamily *> * GeneFamilyList ,map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, double Gcost, double Bcost , bool boltzmann, bool SubRecInAdj,double WDupCost, double WLossCost, double WHgtCost, bool Verbose, bool SuperVerbose, bool galwaysGain, double gC1Advantage, double boltzmannTemp = 1, double absencePenalty = -1, double adjScoreLogBase =10000, bool interactionMode = false);
 void PopulatesCoeventsFromAdjForest( vector <AdjTree * > * AForest, vector <CoEvent> * CoEventSet, int EclassId , int gfam1, int gfam2, ReconciledTree * Rtree1, ReconciledTree * Rtree2, bool ignoreTime = false);
 
 

@@ -39,7 +39,7 @@ This file contains a class contaning all equivalence classes between two familie
 Created the: 26-02-2016
 by: Wandrille Duchemin
 
-Last modified the: 10-02-2017
+Last modified the: 11-01-2018
 by: Wandrille Duchemin
 
 */
@@ -596,13 +596,14 @@ vector < pair < pair<string, string> , double > > EquivalenceClassFamily::create
 														double Gcost, double Bcost, ReconciledTree * rtree1, ReconciledTree * rtree2, 
 														bool VERBOSE, bool boltzmann , 
 														double temp, double absencePenalty, 
-														double adjScoreLogBase )
+														double adjScoreLogBase , bool interactionMode)
 {
+
 	vector < pair < pair<string, string> , double > > ScoreAssociation;
 	for(unsigned i = 0; i < EclassList.size(); i++)
 	{
 		//cout << "ecf createAdjMatrix " << absencePenalty << endl; 
-		vector <double>  scores = EclassList[i].createAdjMatrix(adjacencyScores, speciesC0C1, speGeneAdjNb, Gcost, Bcost, rtree1, rtree2, VERBOSE,  boltzmann ,  temp,  absencePenalty , adjScoreLogBase);//WMODIF
+		vector <double>  scores = EclassList[i].createAdjMatrix(adjacencyScores, speciesC0C1, speGeneAdjNb, Gcost, Bcost, rtree1, rtree2, VERBOSE,  boltzmann ,  temp,  absencePenalty , adjScoreLogBase, interactionMode);//WMODIF
 
 		for(unsigned j = 0 ; j < scores.size(); j++)
 			ScoreAssociation.push_back( pair < pair<string, string> , double >( EclassList[i].getAdj(j), scores[j] ) );

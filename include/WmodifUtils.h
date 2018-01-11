@@ -42,7 +42,7 @@ This file contains utils specific to Wmodif stuff like redrawing reconciliations
 Created the: 24-03-2016
 by: Wandrille Duchemin
 
-Last modified the: 12-12-2017
+Last modified the: 11-01-2018
 by: Wandrille Duchemin
 
 */
@@ -97,7 +97,7 @@ void refiningAndComputingECFamily(EquivalenceClassFamily * ECF,
 									double weightedDupCost, double weightedLossCost, double weightedHGTCost, 
 									bool alwaysGainAtTop, double C1Advantage,bool superverbose,
                                     map<int,vector<float> > speciesC0C1,
-                                    map<int, map<string,int> > speGeneAdjNb );
+                                    map<int, map<string,int> > speGeneAdjNb, bool interactionMode=false );
 
 
 void refiningAndComputingECFamilyList(vector <EquivalenceClassFamily> * ECFams, vector < GeneFamily * > * GeneFamilyList,
@@ -107,7 +107,8 @@ void refiningAndComputingECFamilyList(vector <EquivalenceClassFamily> * ECFams, 
 										double weightedDupCost, double weightedLossCost, double weightedHGTCost, 
 										bool alwaysGainAtTop, double C1Advantage, bool verbose, bool superverbose,
                                         map<int,vector<float> > speciesC0C1,
-                                        map<int, map<string,int> > speGeneAdjNb 
+                                        map<int, map<string,int> > speGeneAdjNb , 
+                                        bool interactionMode=false
                                         );
 
 
@@ -148,7 +149,8 @@ void ReDrawGeneFamily(int GfamIdToReset, int redrawAlgo,
                         double probaC1Bias = 0 , MyCladesAndTripartitions * biasedCCP = NULL,
                         string gPathPrefix = "", int nbTry = 0, int maxNbTry = 1,
                         bool noCoev =false, double DLRecCoevTemp=0.5,
-                        string DTLRecCoevExecPath=""
+                        string DTLRecCoevExecPath="",
+                        bool interactionMode=false
                         );
 
 
@@ -160,7 +162,8 @@ void ReplaceGeneFamilyRecTree(int GfamIdToReset, ReconciledTree * newRTree, doub
                         double weightedDupCost, double weightedLossCost, double weightedHGTCost, bool alwaysGainAtTop, double C1Advantage,
                         bool verbose, bool superverbose,
                         map<int,vector<float> > speciesC0C1,
-                        map<int, map<string,int> > speGeneAdjNb 
+                        map<int, map<string,int> > speGeneAdjNb ,
+                        bool interactionMode=false
                          );
 
 
@@ -193,7 +196,8 @@ bool tryGfamRedraw(int GfamIdToReset, int redrawAlgo, bool trySeveralECFSolution
                     map<int,vector<float> > speciesC0C1,
                     map<int, map<string,int> > speGeneAdjNb,
                     double probaC1Bias = 0 , MyCladesAndTripartitions * biasedCCP = NULL,
-                    string gPathPrefix = ""
+                    string gPathPrefix = "",
+                    bool interactionMode = false
                     );
 
 

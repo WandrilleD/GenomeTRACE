@@ -13,7 +13,7 @@ LIBS=-lm -lbpp-core -lbpp-seq -lbpp-phyl
 
 
 
-W_FILES = GenomeTRACE.cpp WmodifUtils.cpp DLRecCoevWrapper.cpp DeCoUtils.cpp EquivalenceClassFamily.cpp CoEvent.cpp DeCoOutputManager.cpp MultiRootEquivalenceClass.cpp EquivalenceClass.cpp AdjMatrix.cpp AdjMatrix_CostFunctions.cpp MyMatrixAdjSolution.cpp AdjTree.cpp GeneFamily.cpp ReconciledTree.cpp CladeReconciliation.cpp ReconciliationEvent.cpp DTLMatrix.cpp MyCladesAndTripartitions.cpp MyCladesAndTripartitionsHelper.cpp CladesAndTripartitions.cpp MyMatrix.cpp MyGeneTree.cpp MySpeciesTree.cpp DTLGraph.cpp MyMatrixV.cpp MyMatrixT.cpp XMLUtils.cpp
+W_FILES = GenomeTRACE.cpp WmodifUtils.cpp DTLRecCoevWrapper.cpp DeCoUtils.cpp EquivalenceClassFamily.cpp CoEvent.cpp DeCoOutputManager.cpp MultiRootEquivalenceClass.cpp EquivalenceClass.cpp AdjMatrix.cpp AdjMatrix_CostFunctions.cpp MyMatrixAdjSolution.cpp AdjTree.cpp GeneFamily.cpp ReconciledTree.cpp CladeReconciliation.cpp ReconciliationEvent.cpp DTLMatrix.cpp MyCladesAndTripartitions.cpp MyCladesAndTripartitionsHelper.cpp CladesAndTripartitions.cpp MyMatrix.cpp MyGeneTree.cpp MySpeciesTree.cpp DTLGraph.cpp MyMatrixV.cpp MyMatrixT.cpp XMLUtils.cpp
 W_OBJS = $(subst .cpp,.o,$(W_FILES))
 W_OBJS := $(addprefix $(ODIR)/, $(W_OBJS))
 W_SRCS = $(addprefix $(SDIR)/, $(W_FILES))

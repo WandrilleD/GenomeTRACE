@@ -38,7 +38,7 @@ This file contains a class for adjacency classes
 Created the: 24-11-2015
 by: Wandrille Duchemin
 
-Last modified the: 25-02-2017
+Last modified the: 11-01-2018
 by: Wandrille Duchemin
 
 */
@@ -1518,11 +1518,12 @@ Takes:
  - temp (double) (default: 1) : Temperature used in boltzmann computation (a temperature of 0 is not possible)
  - absencePenalty (double) (default: -1): if set to -1 (the default), nothing changes. Otherwise, specify the cost of having an adjacency at a pair of leaves which are not part of the list of adjacencies given at initialization.
  - double adjScoreLogBase : base of the log that will be used to go from adjacency confidence score to parsimony costs
+ - bool interactionMode (default: false) : changes the number of expected transmitted adj per children 
 */
 void EquivalenceClass::createAdjMatrixAux(map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, vector <double> adjacencyScoreVec,
 							double Gcost, double Bcost, 
 							ReconciledTree * rtree1, ReconciledTree * rtree2,
-							bool VERBOSE, bool boltzmann , double temp , double absencePenalty, double adjScoreLogBase)
+							bool VERBOSE, bool boltzmann , double temp , double absencePenalty, double adjScoreLogBase, bool interactionMode)
 {
 	int a1 = getAncestor(0);
 	int a2 = getAncestor(1);
@@ -1540,6 +1541,7 @@ void EquivalenceClass::createAdjMatrixAux(map<int,vector<float> > speciesC0C1, m
 	//cout << "nbadj " << getAdjs().size() << endl;
 	//cout << "EquivalenceClass::createAdjMatrixAux " << absencePenalty << endl;
 	Amat = new AdjMatrix(speciesC0C1, speGeneAdjNb, adjacencyScoreVec, Gcost, Bcost, sub1, sub2, getAdjs(), VERBOSE, boltzmann, temp, absencePenalty, adjScoreLogBase);	
+	Amat->setInteractionMode(interactionMode);
 
 	//cout << "EquivalenceClass::createAdjMatrix from " << rtree1->getNumberOfNodes() << "*" << rtree2->getNumberOfNodes() << " to "<< sub1->getNumberOfNodes() << "*" << sub2->getNumberOfNodes() << endl;
 
@@ -1571,7 +1573,7 @@ Returns:
 vector <double> EquivalenceClass::createAdjMatrix(map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb,
 										double Gcost, double Bcost, 
 										ReconciledTree * rtree1, ReconciledTree * rtree2, 
-										bool VERBOSE, bool boltzmann , double temp, double absencePenalty )
+										bool VERBOSE, bool boltzmann , double temp, double absencePenalty , bool interactionMode)
 {
 
 	vector <double> adjacencyScoreVec;
@@ -1584,7 +1586,7 @@ vector <double> EquivalenceClass::createAdjMatrix(map<int,vector<float> > specie
 	createAdjMatrixAux( speciesC0C1,  speGeneAdjNb,  adjacencyScoreVec,
 							Gcost,  Bcost, 
 							rtree1, rtree2,
-							VERBOSE, boltzmann , temp , absencePenalty, 10000); //last arg is default adjScoreLogBase (won't be used anyway)
+							VERBOSE, boltzmann , temp , absencePenalty, 10000, interactionMode); //last arg is default adjScoreLogBase (won't be used anyway)
 
 	return adjacencyScoreVec;
 }
@@ -1614,7 +1616,7 @@ vector <double> EquivalenceClass::createAdjMatrix(map < string, map <string , do
 										map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb,
 										double Gcost, double Bcost, 
 										ReconciledTree * rtree1, ReconciledTree * rtree2, 
-										bool VERBOSE, bool boltzmann , double temp, double absencePenalty, double adjScoreLogBase )
+										bool VERBOSE, bool boltzmann , double temp, double absencePenalty, double adjScoreLogBase, bool interactionMode )
 {
 
 	vector <double> adjacencyScoreVec;
@@ -1674,7 +1676,7 @@ vector <double> EquivalenceClass::createAdjMatrix(map < string, map <string , do
 	createAdjMatrixAux( speciesC0C1,  speGeneAdjNb,  adjacencyScoreVec,
 							Gcost,  Bcost, 
 							rtree1, rtree2,
-							VERBOSE, boltzmann , temp , absencePenalty, adjScoreLogBase);
+							VERBOSE, boltzmann , temp , absencePenalty, adjScoreLogBase, interactionMode);
 
 	return adjacencyScoreVec;
 }

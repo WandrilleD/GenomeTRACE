@@ -42,7 +42,7 @@ This file contains a class for adjacency classes
 Created the: 24-11-2015
 by: Wandrille Duchemin
 
-Last modified the: 10-02-2017
+Last modified the: 11-01-2018
 by: Wandrille Duchemin
 
 */
@@ -104,7 +104,7 @@ protected:
 	void createAdjMatrixAux(map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, vector <double> adjacencyScoreVec,
 							double Gcost, double Bcost, 
 							ReconciledTree * rtree1, ReconciledTree * rtree2,
-							bool VERBOSE, bool boltzmann , double temp , double absencePenalty, double adjScoreLogBase);
+							bool VERBOSE, bool boltzmann , double temp , double absencePenalty, double adjScoreLogBase , bool interactionMode = false);
 
 
 public:
@@ -262,12 +262,12 @@ public:
 	vector <double> createAdjMatrix(map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb,
 							double Gcost, double Bcost, 
 							ReconciledTree * rtree1, ReconciledTree * rtree2,
-							bool VERBOSE, bool boltzmann , double temp , double absencePenalty);
+							bool VERBOSE, bool boltzmann , double temp , double absencePenalty, bool interactionMode = false);
 
 	vector <double> createAdjMatrix(map < string, map <string , double> > &adjacencyScores, map<int,vector<float> > speciesC0C1, map<int, map<string,int> > speGeneAdjNb, 
 							double Gcost, double Bcost, 
 							ReconciledTree * rtree1, ReconciledTree * rtree2,
-							bool VERBOSE, bool boltzmann , double temp , double absencePenalty, double adjScoreLogBase); // ADseq version of the function
+							bool VERBOSE, bool boltzmann , double temp , double absencePenalty, double adjScoreLogBase, bool interactionMode = false); // ADseq version of the function
 
 	void computeAdjMatrix();
 	void computeAdjMatrix(double WDupCost, double WLossCost, double WHgtCost);
